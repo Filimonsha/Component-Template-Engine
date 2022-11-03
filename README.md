@@ -4,19 +4,8 @@ This is a custom implementation of a tool for creating a component with a lifecy
 
 ## Installation
 
-On start clone repository and install all dependencies
-
 ```bash
-git clone https://github.com/Filimonsha/cubegramm.git
-npm i
-```
-
-So if you want to run dev application just write
-
-```bash
-npm run dev
-//Or buid project
-npm run build
+npm i component-template-engine
 ```
 
 # Component dynamic template engine
