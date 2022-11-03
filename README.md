@@ -1,4 +1,5 @@
 DEPLOY: https://startling-pony-8a5980.netlify.app
+
 # Important 🤫
 
 This is web messenger build on typescript,scss
@@ -12,7 +13,9 @@ On start clone repository and install all dependencies
 git clone https://github.com/Filimonsha/cubegramm.git
 npm i
 ```
+
 So if you want to run dev application just write
+
 ```bash
 npm run dev
 //Or buid project
@@ -20,9 +23,11 @@ npm run build
 ```
 
 # Component dynamic template engine
+
 This util can help you to create components with dynamic templates.
 
-## Usage 
+## Usage
+
 Usage is simple as well!
 
 ### 1. For layout your component you need just create instance of Template class
@@ -36,12 +41,14 @@ Usage is simple as well!
      </button>
     `)
 ```
+
 If you want to dynamical render constructions use " { { } } "
 There you can render:
 
 1 - variables. Just wrap your variable in '! !'
 
 2 - condition. Use scheme like ' if ( condition ) then {//what do you want to eval} '
+
 ```js
 export const messageTemplate = new Template(`
         <div class="message {{ if ( !user! ==="home") then {Just simple string} }} ">
@@ -49,10 +56,12 @@ export const messageTemplate = new Template(`
         </div>
 `)
 ```
-#### If you want just use compiling Template function which return to you simple string without Component life cycle  - use Template.compile()
+
+#### If you want just use compiling Template function which return to you simple string without Component life cycle - use Template.compile()
+
 ```js
 const messageContext = {
-    user:"Test uest",
+    user: "Test uest",
     messageText: "Hello word!"
 }
 export const messageTemplate = new Template(`
@@ -61,6 +70,7 @@ export const messageTemplate = new Template(`
         </div>
 `).compile(messageContext) // Return you compiled string with pasting context
 ```
+
 ### 2. After creating layout your component - create a class which extends Block.
 
 Block class contain all logic that will be rule your component.So you need give constructor template and props.
@@ -72,6 +82,34 @@ export class Message extends Component {
     }
 }
 ```
+
+!!! Component props includes two things:
+
+1. Your state. This is what be observable and if that state change - component will be rerender.
+2. Events. There you describe callbacks which will be added on event listeners on yor component.
+
+```ts
+export interface Props<T> {
+    state: T;
+    events?: { [eventName: string]: EventListener };
+};
+```
+
+Usage typescript: There is example you want to describe your state.
+
+```ts
+type MessageState = {
+    user: string,
+    messageText: string
+}
+
+export class Message extends Block<MessageState> {
+    constructor(props: Props<MessageState>) {
+        super(messageTemplate, props);
+    }
+}
+```
+
 So now you can use this component!
 
 ```js
@@ -102,7 +140,6 @@ const MessagesProps = {
                 })
         ),
     },
-    text: "hello",
 };
 
 class Messages extends Component {
@@ -114,5 +151,55 @@ class Messages extends Component {
 export const MessagesComponent = new Messages(MessagesProps);
 ```
 
-## License
-![img.png](img.png)
+#### What about use events callbacks as an attribute value ?
+
+Easily! Just set attribute which starts with "on-\\event" and set as value name of your callback that in your state!
+
+```js
+//Input.ts
+type
+InputState = {
+    value: string,
+    type: string,
+    handleBlur: EventListener,
+    handleFocus: EventListener,
+}
+//...
+//input.tmpl.ts
+const inputTemplate = new Template(`
+     <label class="input__with-label">
+          <input on-focus={{handleFocus}} on-blur={{handleBlur}} name="{{!name!}}" value="{{!value!}}"  type="{{!type !}}" placeholder={{!placeholder!}}  class="input__with-label_input" type="text" name="login" id="LOGIN">
+    </label>
+`);
+```
+
+### 3. Render your entry Component into DOM.
+
+Component have 5 public methods that you can use.
+
+```js
+updateState = (stateName: string, newValue: any) => {
+    //...
+};
+getState = () => ({...this.componentState});
+
+getComponentChildren = () => ({...this.componentChildren});
+
+getCompiledElement = () => {
+    //...
+}
+renderDom = (rootSelector: string) => {
+    //...
+}
+```
+So if you want to update state and force your component to rerender - use updateState().
+This func you can easily use in your callbacks:
+```ts
+ const testProps = {
+    state:{
+        handleBlur({target}) {
+            this.updateState("value",target.value)
+        },
+    }
+}
+```
