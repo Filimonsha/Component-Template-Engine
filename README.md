@@ -1,25 +1,11 @@
-DEPLOY: https://startling-pony-8a5980.netlify.app
-
 # Important 🤫
 
-This is web messenger build on typescript,scss
-and own Template Engine which build on Regexp and typescript classes.
+This is a custom implementation of a tool for creating a component with a lifecycle, statefulness and its own templating engine.
 
 ## Installation
 
-On start clone repository and install all dependencies
-
 ```bash
-git clone https://github.com/Filimonsha/cubegramm.git
-npm i
-```
-
-So if you want to run dev application just write
-
-```bash
-npm run dev
-//Or buid project
-npm run build
+npm i component-template-engine
 ```
 
 # Component dynamic template engine
