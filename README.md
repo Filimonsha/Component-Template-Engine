@@ -203,3 +203,38 @@ This func you can easily use in your callbacks:
     }
 }
 ```
+### 4. Use routing.
+
+To use routing without page update - use Route and Router classes.
+
+```ts
+const router = new Router()
+
+//register yout routers 
+
+router
+    .use("/messenger", ChatLayoutComponent, {
+    renderCondition: ifUserNotAuthedHandler
+    })
+    .use("/", LoginLayoutComponent, {
+        renderCondition: ifUserAuthedHandler
+    })
+    .use("/sign-up", RegistrationLayoutComponent, {
+        renderCondition: ifUserAuthedHandler
+    })
+    .use("/settings", UserProfileLayout, {
+        renderCondition: ifUserNotAuthedHandler
+    })
+
+router.start()
+```
+
+For redirect use ```go``` method 
+```ts
+const ifUserAuthedHandler = () => {
+    if (localStorage.getItem("currentUserId")) {
+        router.go("/messenger")
+        return false
+    } else return true
+}
+```
